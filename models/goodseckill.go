@@ -1,7 +1,6 @@
 package models
 
 import (
-	"github.com/golang/protobuf/ptypes/timestamp"
 	"time"
 )
 
@@ -17,8 +16,8 @@ type PromotionSecKill struct {
 }
 
 type SuccessKilled struct {
-	GoodsId    int64               `db:"goods_id"`
-	UserId     int64               `db:"user_id"`
-	State      int16               `db:"state"`
-	CreateTime timestamp.Timestamp `db:"create_time"`
+	GoodsId    int64     `db:"goods_id"`
+	UserId     int64     `db:"user_id"`
+	State      int16     `db:"state"`
+	CreateTime time.Time `db:"create_time"`
 }
