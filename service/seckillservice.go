@@ -4,8 +4,11 @@ import (
 	"fmt"
 	"seckill-golang/dao/db"
 	"seckill-golang/models"
+	"sync"
 	"time"
 )
+
+var lock sync.Mutex
 
 func InitializeSecKill(goodsId int64) {
 	tx, err := db.DB.Beginx() // 开启事务
@@ -64,6 +67,13 @@ func HandleSeckill(goodsId int64, userId int64) error {
 	}
 	tx.Commit()
 	return nil
+}
+
+func HandleSecKillWithLock(goodsId int64, userId int64) error {
+	lock.Lock()
+	err := HandleSeckill(goodsId, userId)
+	lock.Unlock()
+	return err
 }
 
 func GetKilledCount(goodsId int64) (int64, error) {

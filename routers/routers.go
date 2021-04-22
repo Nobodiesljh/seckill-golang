@@ -16,6 +16,8 @@ func SetupRouter() *gin.Engine {
 	{
 		// case1:不加锁,出现超卖现象
 		seckillGroup.GET("/handle", controller.Handle)
+		// case2:使用sync包中的Mutex类型的互斥锁,秒杀正常
+		seckillGroup.GET("/handleWithLock", controller.HandleWithLock)
 	}
 	return r
 }

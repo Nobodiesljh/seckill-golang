@@ -88,30 +88,20 @@ Java版简易秒杀系统GitHub地址：[初探并发编程：秒杀系统](http
 
 可以从t_success_killed表中秒杀订单数量 与 t_promotion_seckill表中商品的剩余数量可以看出，出现了超卖
 
-
-
-
-
-
-
-------- 以下内容还未更新--------
-
-### 2. case2:加ReentrantLock,秒杀正常
+### 2. case2:使用sync包中的Mutex类型的互斥锁,秒杀正常
 接口：/seckill/handleWithLock?gid=1197
 
-这里在ReentrantLock和synchronized中选择ReentrantLock，主要是因为synchronized是非公平锁，而ReentrantLock能选择公平与非公平。这里秒杀是要先到先得，因此设置为公平锁
+这里注意要用锁把整个事务都包裹起来
 
-这里注意要用锁把整个事务都包裹起来，不然会因为事务还没提交就把锁资源释放而出现的超卖现象
+### 3. case3:Gin框架的钩子函数/中间件加锁，不能
 
-小柒2012/spring-boot-seckill项目中保留了出现超卖现象的代码块，并且提供一种利用自定义注解来解决bug的方法，见下面的case
+Gin框架中存在一个类似于Spring AOP切面编程的一个内容：中间件
 
-### 3. case3:自定义注解+AOP,正常
+但是Gin框架中的中间件，按照我目前的理解，只是相当于一个拦截器，还没有Spring中的切面编程的给函数增强的功能，所以这里不能用它实现加锁了
 
-[从构建分布式秒杀系统聊聊Lock锁使用中的坑](https://blog.52itstyle.vip/archives/2952/)
 
- 接口：/seckill/handleWithAop?gid=1197
 
- 自定义@ServiceLock注解，并自定义LockAspect切面，切给注解，实现一个加锁的操作
+-------- 下面还未更新--------
 
 ### 4. case4:数据库悲观锁(查询加锁),正常
  接口：/seckill/handleWithPccOne?gid=1197
